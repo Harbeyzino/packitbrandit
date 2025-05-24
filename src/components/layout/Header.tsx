@@ -26,19 +26,15 @@ const Header: React.FC = () => {
       <Container>
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            {/* Logo */}
             <a href="/" className="flex items-center">
-              <div className="relative w-40 h-16">
-                <img 
-                  src="https://i.ibb.co/JQ6TGFM/dabi-logo.png" 
-                  alt="Dabi Packaging Ltd Logo" 
-                  className="w-full h-full object-contain" 
-                />
-              </div>
+              <img 
+                src="https://i.ibb.co/JQ6TGFM/dabi-logo.png" 
+                alt="Dabi Packaging Ltd Logo" 
+                className="h-16 w-auto" 
+              />
             </a>
           </div>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
             {NAV_ITEMS.map((item) => (
               <a
@@ -54,11 +50,10 @@ const Header: React.FC = () => {
               </a>
             ))}
             <Button variant="primary" size="sm" className="ml-4">
-              Get Started
+              Request Quote
             </Button>
           </nav>
 
-          {/* Mobile Navigation Toggle */}
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -73,7 +68,6 @@ const Header: React.FC = () => {
         </div>
       </Container>
 
-      {/* Mobile Navigation Menu */}
       {isOpen && (
         <div className="md:hidden bg-white shadow-lg">
           <Container>
@@ -89,7 +83,7 @@ const Header: React.FC = () => {
                 </a>
               ))}
               <Button variant="primary" className="w-full mt-4">
-                Get Started
+                Request Quote
               </Button>
             </nav>
           </Container>
