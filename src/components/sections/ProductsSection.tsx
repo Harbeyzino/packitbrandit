@@ -3,6 +3,7 @@ import Container from '../ui/Container';
 import Card, { CardContent, CardHeader, CardImage } from '../ui/Card';
 import Button from '../ui/Button';
 import { PRODUCTS } from '../../utils/constants';
+import QuotePopup from '../ui/QuotePopup';
 
 interface ProductsSectionProps {
   title?: string;
@@ -15,6 +16,8 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
   subtitle = 'Innovative packaging solutions tailored to your needs',
   showButton = true,
 }) => {
+  const [showQuotePopup, setShowQuotePopup] = React.useState(false);
+
   return (
     <section className="py-16 bg-gray-50">
       <Container>
@@ -37,7 +40,12 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
               <CardContent>
                 <p className="text-gray-600">{product.description}</p>
                 <div className="mt-4">
-                  <Button variant="outline" size="sm" className="w-full">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full"
+                    onClick={() => setShowQuotePopup(true)}
+                  >
                     Request Quote
                   </Button>
                 </div>
@@ -48,11 +56,21 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 
         {showButton && (
           <div className="flex justify-center mt-12">
-            <Button variant="primary" size="lg" className="px-8">
-              View All Products
+            <Button 
+              variant="primary" 
+              size="lg" 
+              className="px-8"
+              onClick={() => setShowQuotePopup(true)}
+            >
+              Request Quote
             </Button>
           </div>
         )}
+
+        <QuotePopup 
+          isOpen={showQuotePopup} 
+          onClose={() => setShowQuotePopup(false)} 
+        />
       </Container>
     </section>
   );

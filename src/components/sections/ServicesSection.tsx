@@ -2,6 +2,7 @@ import React from 'react';
 import Container from '../ui/Container';
 import { Factory, Lightbulb, Palette, Truck } from 'lucide-react';
 import { SERVICES } from '../../utils/constants';
+import ContactForm from './ContactForm';
 
 interface ServicesSectionProps {
   title?: string;
@@ -12,6 +13,8 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
   title = 'Our Services',
   subtitle = 'Comprehensive packaging solutions from concept to delivery',
 }) => {
+  const [showExpertForm, setShowExpertForm] = React.useState(false);
+
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case 'Palette':
@@ -55,14 +58,32 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
         <div className="mt-12 p-8 bg-blue-50 rounded-xl text-center">
           <h3 className="text-2xl font-semibold text-gray-900 mb-4">Need expert advice on your packaging needs?</h3>
           <p className="text-lg text-gray-600 mb-6">Our team of specialists is ready to help you find the perfect solution.</p>
-          <a 
-            href="/services" 
+          <button 
+            onClick={() => setShowExpertForm(true)}
             className="inline-flex items-center justify-center h-10 px-6 font-medium tracking-wide text-white transition duration-200 bg-blue-500 rounded-md hover:bg-blue-600 focus:shadow-outline focus:outline-none"
           >
             Talk to an Expert
-          </a>
+          </button>
         </div>
       </Container>
+
+      {showExpertForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-8 max-w-2xl w-full m-4 max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowExpertForm(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            >
+              ×
+            </button>
+            <ContactForm
+              title="Speak with Our Expert"
+              subtitle="Tell us about your needs and our packaging specialist will get in touch with you shortly."
+              formType="expert"
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };

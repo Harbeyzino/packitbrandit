@@ -4,8 +4,11 @@ import Card, { CardContent, CardHeader, CardImage } from '../ui/Card';
 import Button from '../ui/Button';
 import { EQUIPMENT } from '../../utils/constants';
 import { Check } from 'lucide-react';
+import QuotePopup from '../ui/QuotePopup';
 
 const EquipmentSection: React.FC = () => {
+  const [showQuotePopup, setShowQuotePopup] = React.useState(false);
+
   return (
     <section className="py-16 bg-gray-50">
       <Container>
@@ -39,7 +42,11 @@ const EquipmentSection: React.FC = () => {
                   ))}
                 </ul>
                 <div className="mt-auto">
-                  <Button variant="primary" className="w-full">
+                  <Button 
+                    variant="primary" 
+                    className="w-full"
+                    onClick={() => setShowQuotePopup(true)}
+                  >
                     Request Information
                   </Button>
                 </div>
@@ -47,6 +54,11 @@ const EquipmentSection: React.FC = () => {
             </Card>
           ))}
         </div>
+
+        <QuotePopup 
+          isOpen={showQuotePopup} 
+          onClose={() => setShowQuotePopup(false)} 
+        />
       </Container>
     </section>
   );
