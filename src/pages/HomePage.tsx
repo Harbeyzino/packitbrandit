@@ -20,29 +20,6 @@ const HomePage: React.FC = () => {
       
       <TestimonialsSection />
       
-      <div className="py-16 bg-blue-500 text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Packaging?</h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
-            Partner with Dabi for innovative, sustainable, and effective packaging solutions.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a 
-              href="/contact" 
-              className="inline-flex items-center justify-center h-12 px-8 font-medium tracking-wide text-blue-600 transition duration-200 bg-white rounded-md hover:bg-gray-100 focus:shadow-outline focus:outline-none"
-            >
-              Request a Quote
-            </a>
-            <a 
-              href="/products" 
-              className="inline-flex items-center justify-center h-12 px-8 font-medium tracking-wide text-white transition duration-200 bg-transparent border-2 border-white rounded-md hover:bg-white/10 focus:shadow-outline focus:outline-none"
-            >
-              Explore Products
-            </a>
-          </div>
-        </div>
-      </div>
-      
       <BlogPreview />
       
       <ContactForm formType="quote" />

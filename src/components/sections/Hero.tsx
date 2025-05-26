@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Container from '../ui/Container';
 import { PRODUCTS } from '../../utils/constants';
@@ -15,6 +15,15 @@ const Hero: React.FC<HeroProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [direction, setDirection] = React.useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setDirection(1);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % PRODUCTS.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(timer);
+  }, []);
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -44,13 +53,13 @@ const Hero: React.FC<HeroProps> = ({
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-700 text-white min-h-[600px] flex items-center">
+    <div className="relative bg-gradient-to-r from-blue-500 to-blue-700 text-white min-h-[600px] flex items-center pt-16">
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-700/80" />
       </div>
 
-      <Container className="relative z-10 py-20">
-        <div className="max-w-3xl mx-auto text-center mb-12">
+      <Container className="relative z-10 py-12">
+        <div className="max-w-3xl mx-auto text-center mb-8">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fadeIn">
             {title}
           </h1>
