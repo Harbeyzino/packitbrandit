@@ -1,74 +1,134 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Container from '../ui/Container';
 import { PRODUCTS } from '../../utils/constants';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface HeroProps {
   title: string;
   subtitle: string;
-  image?: string;
-  primaryButtonText?: string;
-  secondaryButtonText?: string;
-  onPrimaryClick?: () => void;
-  onSecondaryClick?: () => void;
 }
 
 const Hero: React.FC<HeroProps> = ({
   title,
   subtitle,
-  image = 'https://images.pexels.com/photos/4482900/pexels-photo-4482900.jpeg',
-  primaryButtonText,
-  secondaryButtonText,
-  onPrimaryClick,
-  onSecondaryClick,
 }) => {
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [direction, setDirection] = React.useState(0);
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0
+    })
+  };
+
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+
+  const paginate = (newDirection: number) => {
+    setDirection(newDirection);
+    setCurrentIndex((prevIndex) => (prevIndex + newDirection + PRODUCTS.length) % PRODUCTS.length);
+  };
+
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+    <div className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-700 text-white min-h-[600px] flex items-center">
       <div className="absolute inset-0 z-0">
-        <img
-          src={image}
-          alt="Hero background"
-          className="w-full h-full object-cover opacity-20"
-        />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-700/80" />
       </div>
 
-      <Container className="relative z-10 py-20 md:py-28">
-        <div className="max-w-3xl mx-auto text-center">
+      <Container className="relative z-10 py-20">
+        <div className="max-w-3xl mx-auto text-center mb-12">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fadeIn">
             {title}
           </h1>
-          <p className="text-xl md:text-2xl text-blue-100 mb-8 animate-fadeIn animation-delay-200">
+          <p className="text-xl md:text-2xl text-blue-100 animate-fadeIn animation-delay-200">
             {subtitle}
           </p>
         </div>
 
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
-          {PRODUCTS.map((product) => (
-            <div key={product.id} className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center transform hover:scale-105 transition-transform duration-300">
-              <img
-                src={product.imageUrl}
-                alt={product.name}
-                className="w-full h-32 object-cover rounded-md mb-4"
+        <div className="relative max-w-4xl mx-auto">
+          <AnimatePresence initial={false} custom={direction}>
+            <motion.div
+              key={currentIndex}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 }
+              }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={1}
+              onDragEnd={(e, { offset, velocity }) => {
+                const swipe = swipePower(offset.x, velocity.x);
+
+                if (swipe < -swipeConfidenceThreshold) {
+                  paginate(1);
+                } else if (swipe > swipeConfidenceThreshold) {
+                  paginate(-1);
+                }
+              }}
+              className="absolute w-full"
+            >
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8">
+                <div className="aspect-w-16 aspect-h-9 mb-6">
+                  <img
+                    src={PRODUCTS[currentIndex].imageUrl}
+                    alt={PRODUCTS[currentIndex].name}
+                    className="w-full h-[400px] object-cover rounded-lg"
+                  />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">{PRODUCTS[currentIndex].name}</h3>
+                <p className="text-blue-100">{PRODUCTS[currentIndex].description}</p>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          <button
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-2 backdrop-blur-sm transition-colors"
+            onClick={() => paginate(-1)}
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-2 backdrop-blur-sm transition-colors"
+            onClick={() => paginate(1)}
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {PRODUCTS.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setDirection(index > currentIndex ? 1 : -1);
+                  setCurrentIndex(index);
+                }}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  index === currentIndex ? 'bg-white' : 'bg-white/50'
+                }`}
               />
-              <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-              <p className="text-sm text-blue-100">{product.description}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </Container>
-      
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 120"
-          className="w-full h-auto"
-        >
-          <path
-            fill="#ffffff"
-            d="M0,96L48,90.7C96,85,192,75,288,69.3C384,64,480,64,576,74.7C672,85,768,107,864,101.3C960,96,1056,64,1152,58.7C1248,53,1344,75,1392,85.3L1440,96L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"
-          />
-        </svg>
-      </div>
     </div>
   );
 };

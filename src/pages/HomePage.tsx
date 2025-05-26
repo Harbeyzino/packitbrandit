@@ -12,8 +12,6 @@ const HomePage: React.FC = () => {
       <Hero
         title="Innovative Packaging Solutions for Your Business"
         subtitle="We help businesses create custom packaging that protects products, enhances brand identity, and delights customers."
-        primaryButtonText="Get Started"
-        secondaryButtonText="Speak to an Expert"
       />
       
       <ProductsSection />
