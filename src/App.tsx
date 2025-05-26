@@ -8,6 +8,7 @@ import AboutPage from './pages/AboutPage';
 import EquipmentPage from './pages/EquipmentPage';
 import BlogPage from './pages/BlogPage';
 import ContactPage from './pages/ContactPage';
+import AdminBlogPage from './pages/AdminBlogPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/equipment" element={<EquipmentPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/admin/blog" element={<AdminBlogPage />} />
         </Routes>
       </Layout>
     </Router>
