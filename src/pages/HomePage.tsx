@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Hero from '../components/sections/Hero';
 import ProductsSection from '../components/sections/ProductsSection';
 import ServicesSection from '../components/sections/ServicesSection';
 import TestimonialsSection from '../components/sections/TestimonialsSection';
 import BlogPreview from '../components/sections/BlogPreview';
 import ContactForm from '../components/sections/ContactForm';
+import QuotePopup from '../components/ui/QuotePopup';
 
 const HomePage: React.FC = () => {
+  const [showQuotePopup, setShowQuotePopup] = React.useState(false);
+  const [showExpertForm, setShowExpertForm] = React.useState(false);
+
   return (
     <>
       <Hero
@@ -14,12 +18,12 @@ const HomePage: React.FC = () => {
         subtitle="We help businesses create custom packaging that protects products, enhances brand identity, and delights customers."
         primaryButtonText="Get Started"
         secondaryButtonText="Speak to an Expert"
+        onPrimaryClick={() => setShowQuotePopup(true)}
+        onSecondaryClick={() => setShowExpertForm(true)}
       />
       
       <ProductsSection />
-      
       <ServicesSection />
-      
       <TestimonialsSection />
       
       <div className="py-16 bg-blue-500 text-white">
@@ -29,25 +33,46 @@ const HomePage: React.FC = () => {
             Partner with Dabi for innovative, sustainable, and effective packaging solutions.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <a 
-              href="/contact" 
+            <button 
+              onClick={() => setShowQuotePopup(true)}
               className="inline-flex items-center justify-center h-12 px-8 font-medium tracking-wide text-blue-600 transition duration-200 bg-white rounded-md hover:bg-gray-100 focus:shadow-outline focus:outline-none"
             >
               Request a Quote
-            </a>
-            <a 
-              href="/products" 
+            </button>
+            <button 
+              onClick={() => setShowExpertForm(true)}
               className="inline-flex items-center justify-center h-12 px-8 font-medium tracking-wide text-white transition duration-200 bg-transparent border-2 border-white rounded-md hover:bg-white/10 focus:shadow-outline focus:outline-none"
             >
-              Explore Products
-            </a>
+              Talk to an Expert
+            </button>
           </div>
         </div>
       </div>
       
       <BlogPreview />
       
-      <ContactForm formType="quote" />
+      <QuotePopup 
+        isOpen={showQuotePopup} 
+        onClose={() => setShowQuotePopup(false)} 
+      />
+
+      {showExpertForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-8 max-w-2xl w-full m-4 max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setShowExpertForm(false)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+            >
+              ×
+            </button>
+            <ContactForm
+              title="Speak with Our Expert"
+              subtitle="Tell us about your needs and our packaging specialist will get in touch with you shortly."
+              formType="expert"
+            />
+          </div>
+        </div>
+      )}
     </>
   );
 };
