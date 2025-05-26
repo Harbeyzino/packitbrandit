@@ -20,7 +20,7 @@ const Hero: React.FC<HeroProps> = ({
     const timer = setInterval(() => {
       setDirection(1);
       setCurrentIndex((prevIndex) => (prevIndex + 1) % PRODUCTS.length);
-    }, 5000); // Change slide every 5 seconds
+    }, 5000);
 
     return () => clearInterval(timer);
   }, []);
@@ -34,7 +34,7 @@ const Hero: React.FC<HeroProps> = ({
       zIndex: 1,
       x: 0,
       opacity: 1
-    },
+    }),
     exit: (direction: number) => ({
       zIndex: 0,
       x: direction < 0 ? 1000 : -1000,
@@ -53,22 +53,9 @@ const Hero: React.FC<HeroProps> = ({
   };
 
   return (
-    <div className="relative bg-gradient-to-r from-blue-500 to-blue-700 text-white min-h-[600px] flex items-center pt-16">
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-700/80" />
-      </div>
-
-      <Container className="relative z-10 py-12">
-        <div className="max-w-3xl mx-auto text-center mb-8">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fadeIn">
-            {title}
-          </h1>
-          <p className="text-xl md:text-2xl text-blue-100 animate-fadeIn animation-delay-200">
-            {subtitle}
-          </p>
-        </div>
-
-        <div className="relative max-w-4xl mx-auto">
+    <div className="relative bg-gradient-to-r from-blue-500 to-blue-700 text-white">
+      <Container className="relative z-10">
+        <div className="max-w-4xl mx-auto pt-16">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div
               key={currentIndex}
@@ -93,7 +80,7 @@ const Hero: React.FC<HeroProps> = ({
                   paginate(-1);
                 }
               }}
-              className="absolute w-full"
+              className="relative"
             >
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8">
                 <div className="aspect-w-16 aspect-h-9 mb-6">
@@ -121,21 +108,15 @@ const Hero: React.FC<HeroProps> = ({
           >
             <ChevronRight className="w-6 h-6" />
           </button>
+        </div>
 
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-            {PRODUCTS.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  setDirection(index > currentIndex ? 1 : -1);
-                  setCurrentIndex(index);
-                }}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentIndex ? 'bg-white' : 'bg-white/50'
-                }`}
-              />
-            ))}
-          </div>
+        <div className="max-w-3xl mx-auto text-center py-12">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fadeIn">
+            {title}
+          </h1>
+          <p className="text-xl md:text-2xl text-blue-100 animate-fadeIn animation-delay-200">
+            {subtitle}
+          </p>
         </div>
       </Container>
     </div>
