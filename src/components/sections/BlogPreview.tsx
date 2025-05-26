@@ -2,9 +2,12 @@ import React from 'react';
 import Container from '../ui/Container';
 import Card, { CardContent, CardHeader, CardImage } from '../ui/Card';
 import Button from '../ui/Button';
-import { BLOG_POSTS } from '../../utils/constants';
+import { useBlogStore } from '../../store/blogStore';
 
 const BlogPreview: React.FC = () => {
+  const { posts } = useBlogStore();
+  const previewPosts = posts.slice(0, 3);
+
   return (
     <section className="py-16 bg-white">
       <Container>
@@ -16,7 +19,7 @@ const BlogPreview: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {BLOG_POSTS.map((post) => (
+          {previewPosts.map((post) => (
             <Card key={post.id} className="group transition-all duration-300 hover:shadow-lg">
               <CardImage 
                 src={post.imageUrl} 
@@ -45,7 +48,7 @@ const BlogPreview: React.FC = () => {
         </div>
 
         <div className="mt-12 text-center">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => window.location.href = '/blog'}>
             View All Articles
           </Button>
         </div>

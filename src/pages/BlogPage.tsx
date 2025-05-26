@@ -4,8 +4,8 @@ import Container from '../components/ui/Container';
 import Card, { CardContent, CardHeader, CardImage } from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import { Form, Input } from '../components/ui/Form';
-import { BLOG_POSTS } from '../utils/constants';
 import { Search } from 'lucide-react';
+import { useBlogStore } from '../store/blogStore';
 
 const categories = [
   { id: 'all', name: 'All Posts' },
@@ -18,9 +18,12 @@ const categories = [
 const BlogPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const { posts } = useBlogStore();
   
-  // For this demo, we'll just show all posts regardless of filter
-  // In a real implementation, you would filter based on category and search
+  const filteredPosts = posts.filter(post => 
+    post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   
   return (
     <>
@@ -101,12 +104,12 @@ const BlogPage: React.FC = () => {
                   {activeCategory === 'all' ? 'All Articles' : categories.find(c => c.id === activeCategory)?.name}
                 </h2>
                 <div className="text-gray-500">
-                  Showing {BLOG_POSTS.length} articles
+                  Showing {filteredPosts.length} articles
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {BLOG_POSTS.map((post) => (
+                {filteredPosts.map((post) => (
                   <Card key={post.id} className="h-full group transition-all duration-300 hover:shadow-lg">
                     <CardImage 
                       src={post.imageUrl} 
@@ -132,92 +135,6 @@ const BlogPage: React.FC = () => {
                     </CardContent>
                   </Card>
                 ))}
-                
-                {/* Additional blog posts for the demo */}
-                <Card className="h-full group transition-all duration-300 hover:shadow-lg">
-                  <CardImage 
-                    src="https://images.pexels.com/photos/6044266/pexels-photo-6044266.jpeg" 
-                    alt="Eco-friendly packaging" 
-                    className="h-48 transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <CardHeader>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-gray-500">March 15, 2025</span>
-                      <span className="text-sm text-blue-500">Jessica Wang</span>
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                      5 Ways to Make Your Packaging More Eco-Friendly
-                    </h3>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">Discover practical strategies to make your packaging more sustainable without compromising on quality or protection.</p>
-                    <div className="mt-4">
-                      <Button variant="text" className="px-0">
-                        Read More →
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="h-full group transition-all duration-300 hover:shadow-lg">
-                  <CardImage 
-                    src="https://images.pexels.com/photos/4466540/pexels-photo-4466540.jpeg" 
-                    alt="Packaging design trends" 
-                    className="h-48 transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <CardHeader>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm text-gray-500">February 28, 2025</span>
-                      <span className="text-sm text-blue-500">Michael Chen</span>
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                      The Psychology of Packaging Colors
-                    </h3>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600">How color choices in your packaging can influence consumer perception and purchasing decisions.</p>
-                    <div className="mt-4">
-                      <Button variant="text" className="px-0">
-                        Read More →
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-              
-              <div className="mt-12 flex justify-center">
-                <nav className="inline-flex rounded-md shadow-sm">
-                  <a
-                    href="#"
-                    className="px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  >
-                    Previous
-                  </a>
-                  <a
-                    href="#"
-                    className="px-4 py-2 border-t border-b border-r border-gray-300 bg-blue-50 text-sm font-medium text-blue-600"
-                  >
-                    1
-                  </a>
-                  <a
-                    href="#"
-                    className="px-4 py-2 border-t border-b border-r border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  >
-                    2
-                  </a>
-                  <a
-                    href="#"
-                    className="px-4 py-2 border-t border-b border-r border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  >
-                    3
-                  </a>
-                  <a
-                    href="#"
-                    className="px-4 py-2 border-t border-b border-r border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  >
-                    Next
-                  </a>
-                </nav>
               </div>
             </div>
           </div>

@@ -3,9 +3,10 @@ import Container from '../components/ui/Container';
 import { Form, Input, Textarea } from '../components/ui/Form';
 import Button from '../components/ui/Button';
 import { BlogPost } from '../types';
+import { useBlogStore } from '../store/blogStore';
 
 const AdminBlogPage: React.FC = () => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const { posts, addPost, deletePost } = useBlogStore();
   const [formData, setFormData] = useState({
     title: '',
     excerpt: '',
@@ -21,17 +22,17 @@ const AdminBlogPage: React.FC = () => {
       title: formData.title,
       excerpt: formData.excerpt,
       content: formData.content,
-      imageUrl: formData.imageUrl,
+      imageUrl: formData.imageUrl || 'https://images.pexels.com/photos/5246121/pexels-photo-5246121.jpeg',
       date: new Date().toLocaleDateString('en-US', { 
         year: 'numeric', 
         month: 'long', 
         day: 'numeric' 
       }),
-      author: 'Admin', // This could be dynamic based on logged in user
+      author: 'Admin',
       slug: formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
     };
 
-    setPosts([newPost, ...posts]);
+    addPost(newPost);
     setFormData({
       title: '',
       excerpt: '',
@@ -39,7 +40,7 @@ const AdminBlogPage: React.FC = () => {
       imageUrl: '',
     });
 
-    alert('Blog post created successfully!');
+    alert('Blog post published successfully!');
   };
 
   return (
@@ -68,7 +69,7 @@ const AdminBlogPage: React.FC = () => {
                 name="imageUrl"
                 value={formData.imageUrl}
                 onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                required
+                placeholder="Leave empty for default image"
               />
               
               <Textarea
@@ -124,7 +125,7 @@ const AdminBlogPage: React.FC = () => {
                         className="text-red-500 border-red-500 hover:bg-red-50"
                         onClick={() => {
                           if (window.confirm('Are you sure you want to delete this post?')) {
-                            setPosts(posts.filter(p => p.id !== post.id));
+                            deletePost(post.id);
                           }
                         }}
                       >
