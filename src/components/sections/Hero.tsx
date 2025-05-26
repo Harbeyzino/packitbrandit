@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from '../ui/Container';
-import Button from '../ui/Button';
+import { PRODUCTS } from '../../utils/constants';
 
 interface HeroProps {
   title: string;
@@ -23,7 +23,6 @@ const Hero: React.FC<HeroProps> = ({
 }) => {
   return (
     <div className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-blue-700 text-white">
-      {/* Background Image Overlay */}
       <div className="absolute inset-0 z-0">
         <img
           src={image}
@@ -41,34 +40,23 @@ const Hero: React.FC<HeroProps> = ({
           <p className="text-xl md:text-2xl text-blue-100 mb-8 animate-fadeIn animation-delay-200">
             {subtitle}
           </p>
-          
-          {(primaryButtonText || secondaryButtonText) && (
-            <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fadeIn animation-delay-400">
-              {primaryButtonText && (
-                <Button 
-                  variant="secondary" 
-                  size="lg" 
-                  onClick={onPrimaryClick}
-                >
-                  {primaryButtonText}
-                </Button>
-              )}
-              {secondaryButtonText && (
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="bg-transparent border-white text-white hover:bg-white/10"
-                  onClick={onSecondaryClick}
-                >
-                  {secondaryButtonText}
-                </Button>
-              )}
+        </div>
+
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
+          {PRODUCTS.map((product) => (
+            <div key={product.id} className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center transform hover:scale-105 transition-transform duration-300">
+              <img
+                src={product.imageUrl}
+                alt={product.name}
+                className="w-full h-32 object-cover rounded-md mb-4"
+              />
+              <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+              <p className="text-sm text-blue-100">{product.description}</p>
             </div>
-          )}
+          ))}
         </div>
       </Container>
       
-      {/* Wave shape at bottom */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg
           xmlns="http://www.w3.org/2000/svg"

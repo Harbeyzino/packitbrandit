@@ -60,6 +60,14 @@ const Header: React.FC = () => {
               >
                 Request Quote
               </Button>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="ml-2"
+                href="/contact"
+              >
+                Get Started
+              </Button>
             </nav>
 
             <div className="md:hidden">
@@ -99,6 +107,13 @@ const Header: React.FC = () => {
                   }}
                 >
                   Request Quote
+                </Button>
+                <Button 
+                  variant="secondary" 
+                  className="w-full mt-2"
+                  href="/contact"
+                >
+                  Get Started
                 </Button>
               </nav>
             </Container>
