@@ -1,46 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Container from '../components/ui/Container';
-import { Form, Input, Textarea } from '../components/ui/Form';
+import { Form, Input, Select, Textarea } from '../components/ui/Form';
 import Button from '../components/ui/Button';
-import { BlogPost } from '../types';
 import { useBlogStore } from '../store/blogStore';
 
+const categories = [
+  { value: 'sustainability', label: 'Sustainability' },
+  { value: 'design', label: 'Packaging Design' },
+  { value: 'industry', label: 'Industry Trends' },
+  { value: 'tips', label: 'Tips & Guides' },
+];
+
 const AdminBlogPage: React.FC = () => {
-  const { posts, addPost, deletePost } = useBlogStore();
+  const { posts, addPost, deletePost, fetchPosts } = useBlogStore();
   const [formData, setFormData] = useState({
     title: '',
     excerpt: '',
     content: '',
-    imageUrl: '',
+    image_url: '',
+    category: '',
+    author: 'Admin'
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const newPost: BlogPost = {
-      id: Date.now().toString(),
-      title: formData.title,
-      excerpt: formData.excerpt,
-      content: formData.content,
-      imageUrl: formData.imageUrl || 'https://images.pexels.com/photos/5246121/pexels-photo-5246121.jpeg',
-      date: new Date().toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      }),
-      author: 'Admin',
-      slug: formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-    };
-
-    addPost(newPost);
-    setFormData({
-      title: '',
-      excerpt: '',
-      content: '',
-      imageUrl: '',
-    });
-
-    alert('Blog post published successfully!');
+    try {
+      await addPost(formData);
+      setFormData({
+        title: '',
+        excerpt: '',
+        content: '',
+        image_url: '',
+        category: '',
+        author: 'Admin'
+      });
+      alert('Blog post published successfully!');
+    } catch (error) {
+      alert('Error publishing post: ' + (error as Error).message);
+    }
   };
 
   return (
@@ -66,10 +68,20 @@ const AdminBlogPage: React.FC = () => {
               
               <Input
                 label="Featured Image URL"
-                name="imageUrl"
-                value={formData.imageUrl}
-                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                placeholder="Leave empty for default image"
+                name="image_url"
+                value={formData.image_url}
+                onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                placeholder="https://example.com/image.jpg"
+                required
+              />
+
+              <Select
+                label="Category"
+                name="category"
+                options={categories}
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                required
               />
               
               <Textarea
@@ -89,6 +101,14 @@ const AdminBlogPage: React.FC = () => {
                 required
                 rows={10}
               />
+
+              <Input
+                label="Author"
+                name="author"
+                value={formData.author}
+                onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                required
+              />
             </Form>
           </div>
 
@@ -105,7 +125,7 @@ const AdminBlogPage: React.FC = () => {
                     <div>
                       <h3 className="text-lg font-medium text-gray-900">{post.title}</h3>
                       <p className="text-sm text-gray-500">
-                        Published on {post.date} by {post.author}
+                        Published on {new Date(post.created_at).toLocaleDateString()} by {post.author}
                       </p>
                     </div>
                     <div className="flex gap-2">

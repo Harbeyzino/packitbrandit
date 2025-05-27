@@ -7,7 +7,7 @@ interface BlogStore {
   loading: boolean;
   error: string | null;
   fetchPosts: () => Promise<void>;
-  addPost: (post: Omit<BlogPost, 'id' | 'created_at'>) => Promise<void>;
+  addPost: (post: Partial<BlogPost>) => Promise<void>;
   deletePost: (id: string) => Promise<void>;
   updatePost: (id: string, post: Partial<BlogPost>) => Promise<void>;
 }
@@ -23,11 +23,13 @@ export const useBlogStore = create<BlogStore>((set) => ({
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
+        .eq('published', true)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      set({ posts: data });
+      set({ posts: data || [] });
     } catch (error) {
+      console.error('Error fetching posts:', error);
       set({ error: (error as Error).message });
     } finally {
       set({ loading: false });
@@ -39,13 +41,20 @@ export const useBlogStore = create<BlogStore>((set) => ({
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .insert([post])
+        .insert([{
+          ...post,
+          slug: post.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          published: true
+        }])
         .select()
         .single();
 
       if (error) throw error;
       set((state) => ({ posts: [data, ...state.posts] }));
     } catch (error) {
+      console.error('Error adding post:', error);
       set({ error: (error as Error).message });
     } finally {
       set({ loading: false });
@@ -65,6 +74,7 @@ export const useBlogStore = create<BlogStore>((set) => ({
         posts: state.posts.filter(post => post.id !== id)
       }));
     } catch (error) {
+      console.error('Error deleting post:', error);
       set({ error: (error as Error).message });
     } finally {
       set({ loading: false });
@@ -76,7 +86,10 @@ export const useBlogStore = create<BlogStore>((set) => ({
     try {
       const { data, error } = await supabase
         .from('blog_posts')
-        .update(post)
+        .update({
+          ...post,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', id)
         .select()
         .single();
@@ -86,6 +99,7 @@ export const useBlogStore = create<BlogStore>((set) => ({
         posts: state.posts.map(p => p.id === id ? data : p)
       }));
     } catch (error) {
+      console.error('Error updating post:', error);
       set({ error: (error as Error).message });
     } finally {
       set({ loading: false });

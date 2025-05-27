@@ -29,10 +29,14 @@ export interface BlogPost {
   id: string;
   title: string;
   excerpt: string;
-  date: string;
+  content: string;
+  image_url: string;
   author: string;
-  imageUrl: string;
   slug: string;
+  created_at: string;
+  updated_at: string;
+  published: boolean;
+  category: string;
 }
 
 export interface FAQ {
