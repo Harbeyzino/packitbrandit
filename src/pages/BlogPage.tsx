@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Hero from '../components/sections/Hero';
 import Container from '../components/ui/Container';
 import Card, { CardContent, CardHeader, CardImage } from '../components/ui/Card';
@@ -16,13 +17,19 @@ const categories = [
 ];
 
 const BlogPage: React.FC = () => {
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const { posts } = useBlogStore();
+  const { posts, fetchPosts } = useBlogStore();
   
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
   const filteredPosts = posts.filter(post => 
-    post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
+    (post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())) &&
+    (activeCategory === 'all' || post.category === activeCategory)
   );
   
   return (
@@ -110,7 +117,11 @@ const BlogPage: React.FC = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {filteredPosts.map((post) => (
-                  <Card key={post.id} className="h-full group transition-all duration-300 hover:shadow-lg">
+                  <Card 
+                    key={post.id} 
+                    className="h-full group transition-all duration-300 hover:shadow-lg cursor-pointer"
+                    onClick={() => navigate(`/blog/${post.slug}`)}
+                  >
                     <CardImage 
                       src={post.imageUrl} 
                       alt={post.title} 
