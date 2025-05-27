@@ -1,15 +1,11 @@
 import { create } from 'zustand';
 import { BlogPost } from '../types';
-import { supabase } from '../lib/supabase';
 
 interface BlogStore {
   posts: BlogPost[];
   loading: boolean;
   error: string | null;
   fetchPosts: () => Promise<void>;
-  addPost: (post: Partial<BlogPost>) => Promise<void>;
-  deletePost: (id: string) => Promise<void>;
-  updatePost: (id: string, post: Partial<BlogPost>) => Promise<void>;
 }
 
 export const useBlogStore = create<BlogStore>((set) => ({
@@ -20,86 +16,26 @@ export const useBlogStore = create<BlogStore>((set) => ({
   fetchPosts: async () => {
     set({ loading: true, error: null });
     try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('published', true)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      set({ posts: data || [] });
+      const response = await fetch('https://fi707.wordpress.com/wp-json/wp/v2/posts?_embed');
+      if (!response.ok) throw new Error('Failed to fetch posts from WordPress');
+      const data = await response.json();
+      // Map WordPress post data to BlogPost type
+      const posts: BlogPost[] = data.map((post: any) => ({
+        id: post.id.toString(),
+        title: post.title.rendered,
+        excerpt: post.excerpt.rendered.replace(/<[^>]+>/g, ''),
+        content: post.content.rendered || '',
+        image_url: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+        author: post._embedded?.author?.[0]?.name || 'Unknown',
+        slug: post.slug,
+        created_at: post.date || '',
+        updated_at: post.modified || '',
+        published: post.status === 'publish',
+        category: (post._embedded?.['wp:term']?.[0]?.[0]?.name || '').toLowerCase() || 'uncategorized',
+      }));
+      set({ posts });
     } catch (error) {
       console.error('Error fetching posts:', error);
-      set({ error: (error as Error).message });
-    } finally {
-      set({ loading: false });
-    }
-  },
-
-  addPost: async (post) => {
-    set({ loading: true, error: null });
-    try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .insert([{
-          ...post,
-          slug: post.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          published: true
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-      set((state) => ({ posts: [data, ...state.posts] }));
-    } catch (error) {
-      console.error('Error adding post:', error);
-      set({ error: (error as Error).message });
-    } finally {
-      set({ loading: false });
-    }
-  },
-
-  deletePost: async (id) => {
-    set({ loading: true, error: null });
-    try {
-      const { error } = await supabase
-        .from('blog_posts')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-      set((state) => ({
-        posts: state.posts.filter(post => post.id !== id)
-      }));
-    } catch (error) {
-      console.error('Error deleting post:', error);
-      set({ error: (error as Error).message });
-    } finally {
-      set({ loading: false });
-    }
-  },
-
-  updatePost: async (id, post) => {
-    set({ loading: true, error: null });
-    try {
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .update({
-          ...post,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      set((state) => ({
-        posts: state.posts.map(p => p.id === id ? data : p)
-      }));
-    } catch (error) {
-      console.error('Error updating post:', error);
       set({ error: (error as Error).message });
     } finally {
       set({ loading: false });

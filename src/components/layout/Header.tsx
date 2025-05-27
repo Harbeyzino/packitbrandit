@@ -4,6 +4,7 @@ import Container from '../ui/Container';
 import { NAV_ITEMS } from '../../utils/constants';
 import Button from '../ui/Button';
 import QuotePopup from '../ui/QuotePopup';
+import logo from '../../assets/logo.png';
 
 const Header: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,9 +32,9 @@ const Header: React.FC = () => {
             <div className="flex items-center">
               <a href="/" className="flex items-center">
                 <img 
-                  src="https://i.ibb.co/JQ6TGFM/dabi-logo.png" 
+                  src={logo} 
                   alt="Dabi Packaging Ltd Logo" 
-                  className="h-16 w-auto" 
+                  className="h-20 w-auto" 
                 />
               </a>
             </div>

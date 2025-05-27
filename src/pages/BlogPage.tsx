@@ -29,7 +29,7 @@ const BlogPage: React.FC = () => {
   const filteredPosts = posts.filter(post => 
     (post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())) &&
-    (activeCategory === 'all' || post.category === activeCategory)
+    (activeCategory === 'all' || (post.category && post.category === activeCategory))
   );
   
   return (
@@ -118,34 +118,41 @@ const BlogPage: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {filteredPosts.map((post) => (
                   <Card 
-                    key={post.id} 
+                    key={post.id}
                     className="h-full group transition-all duration-300 hover:shadow-lg cursor-pointer"
-                    onClick={() => navigate(`/blog/${post.slug}`)}
                   >
-                    <CardImage 
-                      src={post.imageUrl} 
-                      alt={post.title} 
-                      className="h-48 transition-transform duration-500 group-hover:scale-105"
-                    />
-                    <CardHeader>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-gray-500">{post.date}</span>
-                        <span className="text-sm text-blue-500">{post.author}</span>
-                      </div>
-                      <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                        {post.title}
-                      </h3>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-600">{post.excerpt}</p>
-                      <div className="mt-4">
-                        <Button variant="text" className="px-0">
-                          Read More →
-                        </Button>
-                      </div>
-                    </CardContent>
+                    <div onClick={() => navigate(`/blog/${post.slug}`)} style={{ cursor: 'pointer' }}>
+                      <CardImage 
+                        src={post.image_url} 
+                        alt={post.title} 
+                        className="h-48 transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <CardHeader>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm text-gray-500">{post.created_at}</span>
+                          <span className="text-sm text-blue-500">{post.author}</span>
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                          {post.title}
+                        </h3>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-gray-600">{post.excerpt}</p>
+                        <div className="mt-4">
+                          <Button variant="text" className="px-0">
+                            Read More →
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </div>
                   </Card>
                 ))}
+                
+                {filteredPosts.length === 0 && (
+                  <div className="col-span-full text-center text-gray-500 py-12">
+                    No blog posts found.
+                  </div>
+                )}
               </div>
             </div>
           </div>
