@@ -133,3 +133,180 @@
    supplement those, or if you remove the `prose` classes. 
    If overriding prose, you might need to be more specific or use !important (though avoid if possible).
 */
+
+/* Blog Post Popup Animation */
+@keyframes popup-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-popup-appear {
+  animation: popup-appear 0.3s ease-out forwards;
+}
+
+/* Ensure blog content styling applies within the popup too */
+.blog-content h1 {
+  @apply text-2xl md:text-3xl font-bold mb-4 text-gray-800;
+}
+
+.blog-content h2 {
+  @apply text-xl md:text-2xl font-semibold mb-3 mt-6 text-gray-700;
+}
+
+.blog-content h3 {
+  @apply text-lg md:text-xl font-semibold mb-2 mt-5 text-gray-700;
+}
+
+.blog-content p {
+  @apply mb-4 text-base text-gray-700 leading-relaxed;
+}
+
+.blog-content ul,
+.blog-content ol {
+  @apply mb-4 pl-6 text-gray-700 list-inside;
+}
+
+.blog-content ul li {
+  @apply list-disc;
+}
+
+.blog-content ol li {
+  @apply list-decimal;
+}
+
+.blog-content a {
+  @apply text-blue-600 hover:underline;
+}
+
+.blog-content blockquote {
+  @apply border-l-4 border-gray-300 pl-4 py-2 my-4 italic text-gray-600;
+}
+
+.blog-content pre {
+  @apply bg-gray-100 p-4 rounded-md overflow-x-auto my-4 text-sm;
+}
+
+.blog-content code {
+  @apply bg-gray-100 text-red-500 px-1 rounded text-sm;
+}
+
+.blog-content pre code {
+  @apply bg-transparent text-inherit p-0 rounded-none;
+}
+
+.blog-content img {
+ @apply max-w-full h-auto rounded-md my-6 shadow-md;
+}
+
+.blog-content table {
+  @apply w-full my-6 border-collapse border border-gray-300;
+}
+
+.blog-content th,
+.blog-content td {
+  @apply border border-gray-300 px-4 py-2 text-left;
+}
+
+.blog-content th {
+  @apply bg-gray-100 font-semibold;
+}
+
+/* Preloader Styles */
+.preloader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff; /* Or your site's primary background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it's on top of everything */
+  opacity: 1;
+  transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+}
+
+.preloader-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.preloader-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Remove or comment out old spinner styles if they exist */
+/*
+.preloader-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border-left-color: #09f; 
+  animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+*/
+
+.snake-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.snake-loader-dot {
+  width: 16px; /* Size of the dots */
+  height: 16px;
+  background-color: #d1d5db; /* Tailwind gray-300 - base color */
+  border-radius: 50%;
+  margin: 0 6px; /* Spacing between dots */
+  animation: snake-dot-animation 1.5s infinite ease-in-out;
+}
+
+/* Stagger the animation for each dot */
+.snake-loader-dot:nth-child(1) {
+  animation-delay: 0s;
+}
+.snake-loader-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.snake-loader-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.snake-loader-dot:nth-child(4) {
+  animation-delay: 0.45s;
+}
+.snake-loader-dot:nth-child(5) {
+  animation-delay: 0.6s;
+}
+
+@keyframes snake-dot-animation {
+  0%, 100% {
+    background-color: #d1d5db; /* Tailwind gray-300 */
+    transform: scale(1);
+  }
+  40% {
+    background-color: #2563eb; /* Tailwind blue-600 - active color */
+    transform: scale(1.2); /* Optional: make active dot slightly larger */
+  }
+  80% {
+    background-color: #d1d5db; /* Tailwind gray-300 */
+    transform: scale(1);
+  }
+}

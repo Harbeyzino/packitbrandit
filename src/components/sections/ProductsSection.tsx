@@ -24,9 +24,11 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 }) => {
   const [showQuotePopup, setShowQuotePopup] = React.useState(false);
 
+  const filteredProducts = PRODUCTS.filter(product => product.name !== "Shipping Containers");
+
   const sliderSettings = {
     dots: false,
-    infinite: PRODUCTS.length > 4,
+    infinite: filteredProducts.length > 4,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -37,21 +39,21 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
         breakpoint: 1024,
         settings: {
           slidesToShow: 3,
-          infinite: PRODUCTS.length > 3,
+          infinite: filteredProducts.length > 3,
         }
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: 2,
-          infinite: PRODUCTS.length > 2,
+          infinite: filteredProducts.length > 2,
         }
       },
       {
         breakpoint: 640,
         settings: {
           slidesToShow: 1,
-          infinite: PRODUCTS.length > 1,
+          infinite: filteredProducts.length > 1,
         }
       }
     ]
@@ -71,7 +73,7 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
         <h3 className="text-xl font-semibold text-gray-900">{product.name}</h3>
       </CardHeader>
       <CardContent className="flex-grow">
-        <p className="text-gray-600">{product.description}</p>
+        <p className="text-gray-600 line-clamp-3">{product.description}</p>
         <div className="mt-4">
           <Button 
             variant="outline" 
@@ -96,15 +98,15 @@ const ProductsSection: React.FC<ProductsSectionProps> = ({
 
         {displayAsCarousel ? (
           <Slider {...sliderSettings} className="pb-8">
-            {PRODUCTS.map((product) => (
-              <div key={product.id} className="px-2 md:px-4">
+            {filteredProducts.map((product) => (
+              <div key={product.id} className="px-2 md:px-4 h-full flex flex-col">
                 {renderProductCard(product)}
               </div>
             ))}
           </Slider>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {PRODUCTS.map((product) => renderProductCard(product))}
+            {filteredProducts.map((product) => renderProductCard(product))}
           </div>
         )}
 

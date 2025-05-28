@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Hero from '../components/sections/Hero';
 import ProductsSection from '../components/sections/ProductsSection';
 import ServicesSection from '../components/sections/ServicesSection';
@@ -6,10 +6,38 @@ import TestimonialsSection from '../components/sections/TestimonialsSection';
 import BlogPreview from '../components/sections/BlogPreview';
 import ContactForm from '../components/sections/ContactForm';
 import QuotePopup from '../components/ui/QuotePopup';
+import { fetchWordPressPosts, WordPressPost } from '../services/wordpressService';
+import BlogPostPopup from '../components/ui/BlogPostPopup';
 
 const HomePage: React.FC = () => {
   const [showQuotePopup, setShowQuotePopup] = React.useState(false);
   const [showExpertForm, setShowExpertForm] = React.useState(false);
+  const [latestPost, setLatestPost] = useState<WordPressPost | null>(null);
+  const [showBlogPopup, setShowBlogPopup] = useState(false);
+
+  useEffect(() => {
+    const popupSessionKey = 'dabiPackagingBlogPopupShown';
+    const hasPopupBeenShown = sessionStorage.getItem(popupSessionKey);
+
+    if (!hasPopupBeenShown) {
+      fetchWordPressPosts()
+        .then(posts => {
+          if (posts && posts.length > 0) {
+            // Assuming the first post is the most recent
+            setLatestPost(posts[0]);
+            // Show popup after a short delay
+            const timer = setTimeout(() => {
+              setShowBlogPopup(true);
+              sessionStorage.setItem(popupSessionKey, 'true');
+            }, 3000); // 3-second delay
+            return () => clearTimeout(timer);
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching latest post for popup:", error);
+        });
+    }
+  }, []);
 
   return (
     <>
@@ -20,6 +48,7 @@ const HomePage: React.FC = () => {
         secondaryButtonText="Speak to an Expert"
         onPrimaryClick={() => setShowQuotePopup(true)}
         onSecondaryClick={() => setShowExpertForm(true)}
+        image="https://i.postimg.cc/hvDvhFcZ/5097372.jpg"
       />
       
       <ProductsSection displayAsCarousel={true} showButton={true} />
@@ -72,6 +101,14 @@ const HomePage: React.FC = () => {
             />
           </div>
         </div>
+      )}
+
+      {latestPost && (
+        <BlogPostPopup 
+          isOpen={showBlogPopup} 
+          onClose={() => setShowBlogPopup(false)} 
+          post={latestPost} 
+        />
       )}
     </>
   );
