@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X } from 'lucide-react';
 import Container from '../ui/Container';
 import { NAV_ITEMS } from '../../utils/constants';
@@ -6,23 +6,49 @@ import Button from '../ui/Button';
 import QuotePopup from '../ui/QuotePopup';
 import logo from '../../assets/logo.png';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onHeightChange: (height: number) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onHeightChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showQuotePopup, setShowQuotePopup] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
 
+    const updateHeight = () => {
+      if (headerRef.current) {
+        onHeightChange(headerRef.current.offsetHeight);
+      }
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    // Call updateHeight initially and on scroll or when isOpen changes (for mobile menu)
+    updateHeight(); 
+    window.addEventListener('resize', updateHeight); // Also update on resize
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateHeight);
+    };
+  }, [onHeightChange, isOpen]); // Add isOpen to dependencies
+
+  // Update height when isScrolled changes, as this can change padding/height
+  useEffect(() => {
+    if (headerRef.current) {
+      onHeightChange(headerRef.current.offsetHeight);
+    }
+  }, [isScrolled, onHeightChange]);
 
   return (
     <>
       <header 
+        ref={headerRef}
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
         }`}

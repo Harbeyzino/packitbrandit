@@ -10,6 +10,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
     // Simulate loading time
@@ -24,9 +25,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <>
       <Preloader isLoading={isLoading} />
       {!isLoading && (
-        <div className="flex flex-col min-h-screen">
-          <Header />
-          <main className="flex-grow pt-16">{children}</main>
+        <div className="flex flex-col min-h-screen overflow-x-hidden">
+          <Header onHeightChange={setHeaderHeight} />
+          <main className="flex-grow" style={{ paddingTop: `${headerHeight}px` }}>{children}</main>
           <Footer />
           <ScrollToTopButton />
         </div>
