@@ -1,161 +1,91 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Hero from '../components/sections/Hero';
+import { Link } from 'react-router-dom';
 import Container from '../components/ui/Container';
 import Card, { CardContent, CardHeader, CardImage } from '../components/ui/Card';
-import Button from '../components/ui/Button';
-import { Form, Input } from '../components/ui/Form';
-import { Search } from 'lucide-react';
-import { useBlogStore } from '../store/blogStore';
-
-const categories = [
-  { id: 'all', name: 'All Posts' },
-  { id: 'sustainability', name: 'Sustainability' },
-  { id: 'design', name: 'Packaging Design' },
-  { id: 'industry', name: 'Industry Trends' },
-  { id: 'tips', name: 'Tips & Guides' },
-];
+import Button from '../components/ui/Button'; // For potential future use (e.g., pagination)
+import Hero from '../components/sections/Hero'; // Optional: for a page title/banner
+import { fetchWordPressPosts, WordPressPost } from '../services/wordpressService';
 
 const BlogPage: React.FC = () => {
-  const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const { posts, fetchPosts } = useBlogStore();
-  
-  useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+  const [posts, setPosts] = useState<WordPressPost[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredPosts = posts.filter(post => 
-    (post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    post.excerpt.toLowerCase().includes(searchQuery.toLowerCase())) &&
-    (activeCategory === 'all' || (post.category && post.category === activeCategory))
-  );
-  
+  useEffect(() => {
+    const getPosts = async () => {
+      setLoading(true);
+      try {
+        const fetchedPosts = await fetchWordPressPosts();
+        setPosts(fetchedPosts);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching blog posts:", err);
+        setError('Failed to load blog posts.');
+      }
+      setLoading(false);
+    };
+
+    getPosts();
+  }, []);
+
+  // Optional: Add a simple Hero section for the page title
+  const pageTitle = "Our Blog";
+  const pageSubtitle = "Explore the latest articles, insights, and news from our team.";
+
   return (
     <>
-      <Hero
-        title="Packaging Insights"
-        subtitle="Stay informed with the latest trends, innovations, and best practices in the packaging industry"
-        image="https://images.pexels.com/photos/3760778/pexels-photo-3760778.jpeg"
-        primaryButtonText="Subscribe to Updates"
-      />
-      
-      <section className="py-16 bg-white">
+      <Hero title={pageTitle} subtitle={pageSubtitle} />
+      <section className="py-16 bg-gray-50">
         <Container>
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Sidebar */}
-            <div className="w-full md:w-1/4">
-              <div className="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Search</h3>
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search articles..."
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md pr-10"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                  <Search className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
-                </div>
-              </div>
-              
-              <div className="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Categories</h3>
-                <ul className="space-y-2">
-                  {categories.map((category) => (
-                    <li key={category.id}>
-                      <button
-                        className={`text-left w-full px-2 py-1.5 rounded-md transition-colors ${
-                          activeCategory === category.id
-                            ? 'bg-blue-50 text-blue-600 font-medium'
-                            : 'text-gray-600 hover:text-blue-600'
-                        }`}
-                        onClick={() => setActiveCategory(category.id)}
-                      >
-                        {category.name}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="bg-blue-50 p-6 rounded-lg shadow-sm">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">Stay Updated</h3>
-                <p className="text-gray-600 mb-4">
-                  Subscribe to our newsletter to receive the latest packaging insights directly in your inbox.
-                </p>
-                <Form 
-                  buttonText="Subscribe"
-                  className="space-y-3"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    alert('Thank you for subscribing!');
-                  }}
-                >
-                  <Input
-                    label=""
-                    name="email"
-                    type="email"
-                    placeholder="Your email address"
-                    required
-                  />
-                </Form>
-              </div>
-            </div>
-            
-            {/* Main Content */}
-            <div className="w-full md:w-3/4">
-              <div className="mb-8 flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-900">
-                  {activeCategory === 'all' ? 'All Articles' : categories.find(c => c.id === activeCategory)?.name}
-                </h2>
-                <div className="text-gray-500">
-                  Showing {filteredPosts.length} articles
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {filteredPosts.map((post) => (
-                  <Card 
-                    key={post.id}
-                    className="h-full group transition-all duration-300 hover:shadow-lg cursor-pointer"
-                  >
-                    <div onClick={() => navigate(`/blog/${post.slug}`)} style={{ cursor: 'pointer' }}>
+          {loading && <p className="text-center text-gray-600">Loading posts...</p>}
+          {error && <p className="text-center text-red-500">{error}</p>}
+          {!loading && !error && posts.length === 0 && (
+            <p className="text-center text-gray-600">No blog posts available yet. Check back soon!</p>
+          )}
+          {!loading && !error && posts.length > 0 && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {posts.map((post) => (
+                <Card key={post.ID} className="group transition-all duration-300 hover:shadow-lg flex flex-col h-full">
+                  <Link to={`/blog/${post.slug}`} className="flex flex-col h-full">
+                    {post.featured_image ? (
                       <CardImage 
-                        src={post.image_url} 
+                        src={post.featured_image} 
                         alt={post.title} 
-                        className="h-48 transition-transform duration-500 group-hover:scale-105"
+                        className="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      <CardHeader>
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm text-gray-500">{post.created_at}</span>
-                          <span className="text-sm text-blue-500">{post.author}</span>
-                        </div>
-                        <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                          {post.title}
-                        </h3>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-gray-600">{post.excerpt}</p>
-                        <div className="mt-4">
-                          <Button variant="text" className="px-0">
-                            Read More →
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </div>
-                  </Card>
-                ))}
-                
-                {filteredPosts.length === 0 && (
-                  <div className="col-span-full text-center text-gray-500 py-12">
-                    No blog posts found.
-                  </div>
-                )}
-              </div>
+                    ) : (
+                      <div className="h-56 w-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">No Image</span>
+                      </div>
+                    )}
+                    <CardHeader className="flex-grow">
+                      <div className="flex justify-between items-center mb-2 text-sm text-gray-500">
+                        <span>{new Date(post.date).toLocaleDateString()}</span>
+                        {post.author && <span className="text-blue-500">{post.author.name}</span>}
+                      </div>
+                      <h3 
+                        className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 transition-colors clamp-2-lines"
+                        dangerouslySetInnerHTML={{ __html: post.title }}
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <div 
+                        className="text-gray-600 clamp-3-lines" 
+                        dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                      />
+                      <div className="mt-4">
+                        {/* The entire card is a link, so this button acts as part of it */}
+                        <span className="text-blue-600 hover:text-blue-700 font-medium text-sm">
+                          Read More →
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Link>
+                </Card>
+              ))}
             </div>
-          </div>
+          )}
+          {/* TODO: Add pagination if there are many posts */}
         </Container>
       </section>
     </>

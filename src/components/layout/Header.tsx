@@ -34,7 +34,7 @@ const Header: React.FC = () => {
                 <img 
                   src={logo} 
                   alt="Dabi Packaging Ltd Logo" 
-                  className="h-20 w-auto" 
+                  className="h-16 w-auto"
                 />
               </a>
             </div>
@@ -63,7 +63,15 @@ const Header: React.FC = () => {
               </Button>
             </nav>
 
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center">
+              <Button
+                variant="primary"
+                size="sm"
+                className="mr-2"
+                onClick={() => setShowQuotePopup(true)}
+              >
+                Get Started
+              </Button>
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={`p-2 rounded-md ${

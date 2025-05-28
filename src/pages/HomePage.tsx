@@ -22,7 +22,7 @@ const HomePage: React.FC = () => {
         onSecondaryClick={() => setShowExpertForm(true)}
       />
       
-      <ProductsSection />
+      <ProductsSection displayAsCarousel={true} showButton={true} />
       <ServicesSection />
       <TestimonialsSection />
       
