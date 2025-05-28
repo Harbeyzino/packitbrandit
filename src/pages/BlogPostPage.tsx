@@ -8,6 +8,7 @@ import {
 } from '../services/wordpressService';
 import Hero from '../components/sections/Hero';
 import Card, { CardImage, CardHeader } from '../components/ui/Card'; // Ensure Card components are imported
+import Preloader from '../components/ui/Preloader'; // Import Preloader
 
 const BlogPostPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -81,9 +82,9 @@ const BlogPostPage: React.FC = () => {
 
   if (loading) {
     return (
-      <Container className="py-8 md:py-16">
-        <p className="text-center text-gray-600">Loading post...</p>
-      </Container>
+      <div className="flex items-center justify-center min-h-screen">
+        <Preloader isLoading={loading} />
+      </div>
     );
   }
 
@@ -148,7 +149,9 @@ const BlogPostPage: React.FC = () => {
           <div className="mt-16 pt-12 border-t border-gray-200">
             <h2 className="text-2xl font-semibold text-gray-900 mb-8">Recent Articles</h2>
             {recentPostsLoading ? (
-              <p className="text-gray-600">Loading recent articles...</p>
+              <div className="flex items-center justify-center py-8">
+                <Preloader isLoading={recentPostsLoading} />
+              </div>
             ) : recentPosts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 {recentPosts.map((rPost) => (

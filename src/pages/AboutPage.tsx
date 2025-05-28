@@ -36,17 +36,22 @@ const AboutPage: React.FC = () => {
         <Container>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Our Story</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Why Dabi (Our Brand Promise)</h2>
               <div className="space-y-4 text-lg text-gray-600">
                 <p>
-                  Founded in 2005, Dabi Packaging Ltd began with a simple mission: to create packaging solutions that not only protect products but also enhance brand experiences.
+                  At Dabi Packaging, we're more than just a packaging supplier; we are your strategic partner in building a brand that resonates and endures. Our promise is built on three core pillars:
                 </p>
-                <p>
-                  What started as a small team of packaging enthusiasts has grown into a leading provider of innovative packaging solutions across multiple industries. Through our journey, we've remained committed to quality, sustainability, and customer satisfaction.
-                </p>
-                <p>
-                  Today, we combine our deep industry expertise with cutting-edge technology to deliver packaging that helps businesses stand out in increasingly competitive markets while minimizing environmental impact.
-                </p>
+                <ul className="list-disc space-y-3 pl-5">
+                  <li>
+                    <strong>Innovation that Elevates:</strong> We don't just create boxes; we craft experiences. Our team is dedicated to pushing the boundaries of packaging design, utilizing cutting-edge technology and sustainable materials to ensure your product not only stands out but also tells a compelling story. From a unique unboxing experience to smart packaging features, we innovate to elevate your brand's perception and value.
+                  </li>
+                  <li>
+                    <strong>Quality that Protects & Impresses:</strong> Your product's integrity is paramount. We commit to the highest standards of quality in every solution we deliver. Our rigorous testing and quality control processes ensure your packaging withstands the rigors of transit, preserves product freshness, and arrives looking impeccable, reinforcing your brand's commitment to excellence.
+                  </li>
+                  <li>
+                    <strong>Partnership that Empowers:</strong> We believe in collaborative success. Your vision is our blueprint. We work closely with you, understanding your specific needs, market challenges, and brand aspirations. Our dedicated experts provide end-to-end support, from concept to delivery, ensuring a seamless process and a final product that perfectly aligns with your brand identity and business goals. With Dabi, you gain a partner invested in your growth and success.
+                  </li>
+                </ul>
               </div>
             </div>
             <div className="rounded-lg overflow-hidden shadow-md">

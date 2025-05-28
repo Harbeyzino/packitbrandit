@@ -103,7 +103,7 @@ const ContactPage: React.FC = () => {
                 Fill out the form below and we'll get back to you as soon as possible.
               </p>
               
-              <ContactForm title="" buttonText="Send Message" />
+              <ContactForm title="" />
             </div>
           </div>
         </Container>
@@ -114,59 +114,21 @@ const ContactPage: React.FC = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Find Us</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Visit our headquarters in Toronto, or contact one of our regional offices.
+              Visit our location in Lagos, Nigeria.
             </p>
           </div>
           
           <div className="rounded-lg overflow-hidden shadow-md h-96 mb-8">
-            {/* This would be a Google Maps embed in a real implementation */}
-            <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-              <p className="text-gray-600 text-lg">Interactive Map Would Be Embedded Here</p>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Toronto (Headquarters)</h3>
-              <address className="not-italic text-gray-600">
-                <p>123 Packaging Lane</p>
-                <p>Business District</p>
-                <p>Toronto, ON M5V 2H1</p>
-                <p className="mt-2">
-                  <a href="tel:+11234567890" className="text-blue-500 hover:underline">
-                    (123) 456-7890
-                  </a>
-                </p>
-              </address>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Vancouver Office</h3>
-              <address className="not-italic text-gray-600">
-                <p>456 Pacific Avenue</p>
-                <p>Downtown Core</p>
-                <p>Vancouver, BC V6B 1Z1</p>
-                <p className="mt-2">
-                  <a href="tel:+12509876543" className="text-blue-500 hover:underline">
-                    (250) 987-6543
-                  </a>
-                </p>
-              </address>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow-sm">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Montreal Office</h3>
-              <address className="not-italic text-gray-600">
-                <p>789 St. Laurent Blvd</p>
-                <p>Le Plateau</p>
-                <p>Montreal, QC H2T 1R1</p>
-                <p className="mt-2">
-                  <a href="tel:+15142345678" className="text-blue-500 hover:underline">
-                    (514) 234-5678
-                  </a>
-                </p>
-              </address>
-            </div>
+            <iframe
+              title="Dabi Packaging Location in Lagos, Nigeria"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d253682.4593276198!2d3.143870395913934!3d6.548035723929841!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2ae68280c1%3A0xdc9e87a367c3d9cb!2sLagos!5e0!3m2!1sen!2sng!4v1677000000000!5m2!1sen!2sng" // Generic Lagos coordinates, replace with specific address if available
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen={true}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </Container>
       </section>

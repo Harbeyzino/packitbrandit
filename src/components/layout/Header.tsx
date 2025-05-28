@@ -100,12 +100,35 @@ const Header: React.FC<HeaderProps> = ({ onHeightChange }) => {
               </Button>
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`p-2 rounded-md ${
-                  isScrolled ? 'text-gray-700' : 'text-gray-800'
-                }`}
+                className={`p-2 rounded-md focus:outline-none ${
+                  isScrolled ? 'text-gray-700 hover:text-gray-600' : 'text-gray-800 hover:text-gray-700'
+                } transition-colors duration-150`}
                 aria-label="Toggle menu"
               >
-                {isOpen ? <X size={24} /> : <Menu size={24} />}
+                <div className="relative w-6 h-6"> {/* Container for icons, w-6 h-6 corresponds to size 24 */}
+                  {/* Menu Icon */}
+                  <span
+                    className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out transform ${
+                      isOpen 
+                        ? 'rotate-90 opacity-0 scale-75' // Rotates out, fades, shrinks
+                        : 'rotate-0 opacity-100 scale-100' // Normal state
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <Menu size={24} />
+                  </span>
+                  {/* X Icon */}
+                  <span
+                    className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ease-in-out transform ${
+                      isOpen 
+                        ? 'rotate-0 opacity-100 scale-100' // Normal state when open
+                        : '-rotate-90 opacity-0 scale-75' // Rotates in from other direction, fades in, grows
+                    }`}
+                    aria-hidden="true"
+                  >
+                    <X size={24} />
+                  </span>
+                </div>
               </button>
             </div>
           </div>
