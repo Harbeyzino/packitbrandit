@@ -11,41 +11,6 @@ This is a modern, responsive web application for Dabi Packaging Ltd, built with 
 - Easy deployment to Vercel
 - **Image Showcase Section:** Responsive image display area for desktop and mobile
 
-## Image Showcase Section
-A dedicated, responsive section for displaying an image on both desktop and mobile views:
-
-```tsx
-import React from "react";
-
-const ImageSection: React.FC = () => {
-  return (
-    <section className="w-full flex justify-center items-center py-12 bg-gray-50">
-      <div className="max-w-4xl w-full flex flex-col md:flex-row items-center gap-8 px-4">
-        {/* Image container */}
-        <div className="w-full md:w-1/2 flex justify-center">
-          <div className="w-64 h-64 md:w-80 md:h-80 bg-white rounded-lg shadow-lg flex items-center justify-center overflow-hidden">
-            {/* Replace src with your image path */}
-            <img
-              src="/src/assets/your-image.png"
-              alt="Showcase"
-              className="object-cover w-full h-full"
-            />
-          </div>
-        </div>
-        {/* Text or additional content */}
-        <div className="w-full md:w-1/2 text-center md:text-left">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Our Showcase</h2>
-          <p className="text-gray-600">
-            Discover our latest packaging solutions and innovations. Our products are designed to meet your needs with quality and style.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default ImageSection;
-```
 
 ## Getting Started
 
